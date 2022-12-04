@@ -1,27 +1,8 @@
-use clap::Parser;
-use std::collections::HashMap;
-use std::fs::File;
-use std::path::Path;
-use std::io::{BufReader, BufRead};
-use std::fmt::Debug;
+use advent_of_code_common;
 
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-struct Args {
-    filepath: String
-}
+use std::collections::HashMap;
 
 fn main() {
-    let args = Args::parse();
-
-    let path = Path::new(&args.filepath);
-    let display = path.display();
-
-    let file = match File::open(&path) {
-        Ok(file) => file,
-        Err(reason) => panic!("couldn't open {}: {}", display, reason),
-    };
-
     const HAND_ROCK: char = 'A';
     const HAND_PAPER: char = 'B';
     const HAND_SCISSORS: char = 'C';
@@ -55,16 +36,15 @@ fn main() {
     ]);
 
     let mut total_score = 0;
-    for line in BufReader::new(file).lines() {
-        let round = line.unwrap();
+    advent_of_code_common::cli_read_file_by_line(|round| {
         if round.is_empty() {
-            continue;
+            return;
         }
         match round_outcome_map.get(&round) {
             Some(player_hand) => total_score += round_score_map.get(&(round.chars().last().unwrap())).unwrap_or(&0) + hand_score_map.get(&player_hand).unwrap_or(&0),
-            None => continue,
+            None => return,
         }
-    }
+    });
 
     println!("{}", total_score);
 }

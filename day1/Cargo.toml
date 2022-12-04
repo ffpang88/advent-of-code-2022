@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.0.29", features = ["derive"] }
+
+[lib]
+name = "advent_of_code_common"
+path = "../advent_of_code_common/src/lib.rs"
